@@ -64,7 +64,13 @@
   function renderLevels(){const body=$('levelRows');body.innerHTML='';for(let r=1;r<=6;r++){const start=r===1?2:(2*r-1)**2+1,end=(2*r+1)**2,tr=document.createElement('tr');[r,start,end,end-start+1].forEach(v=>{const td=document.createElement('td');td.textContent=v.toLocaleString();tr.appendChild(td)});body.appendChild(tr);}}
   function showInfo(n){if(!Number.isSafeInteger(n)||n<1){$('numberInfo').textContent='Enter a positive whole number.';return;}const p=coord(n),angle=(Math.atan2(p.x,p.y)*180/Math.PI+360)%360;const rows=[['Number',n.toLocaleString()],['Ring',ring(n)],['Grid coordinates',`x: ${p.x}, y: ${p.y}`],['Cross classification',cross(p)],['Angle from North',`${angle.toFixed(1)}°`],['Distance from centre',Math.hypot(p.x,p.y).toFixed(2)]];const box=$('numberInfo');box.innerHTML='';rows.forEach(([k,v])=>{const row=document.createElement('div');row.className='info-line';const a=document.createElement('span'),b=document.createElement('strong');a.textContent=k;b.textContent=v;row.append(a,b);box.appendChild(row)});cfg.search=n;draw();}
   function generate(){cfg.limit=Math.max(1,Math.min(Number.MAX_SAFE_INTEGER,parseInt($('limit').value,10)||100000));cfg.cell=Number($('cellSize').value);cfg.showNumbers=$('showNumbers').checked;cfg.cardinal=$('showCardinal').checked;cfg.ordinal=$('showOrdinal').checked;cfg.interval=Number($('interval').value);$('cellLabel').textContent=`${cfg.cell} px`;cfg.panX=0;cfg.panY=0;cfg.zoom=1;draw();}
-  $('generate').addEventListener('click',generate);$('cellSize').addEventListener('input',()=>{$('cellLabel').textContent=`${$('cellSize').value} px`});['showNumbers','showCardinal','showOrdinal','interval'].forEach(id=>$(id).addEventListener('change',generate));
+  $('generate').addEventListener('click',generate);
+  // Apply range changes directly in the GitHub-hosted dashboard; no spreadsheet or reload needed.
+  $('limit').addEventListener('change',generate);
+  $('cellSize').addEventListener('input',()=>{$('cellLabel').textContent=`${$('cellSize').value} px`;});
+  ['showNumbers','showCardinal','showOrdinal','interval'].forEach(id=>$(id).addEventListener('change',generate));
+  // The Center number field doubles as a quick-find shortcut and updates the grid highlight.
+  $('center').addEventListener('change',()=>{const n=Number($('center').value);$('numberSearch').value=n;showInfo(n);});
   document.querySelectorAll('[data-limit]').forEach(b=>b.addEventListener('click',()=>{$('limit').value=b.dataset.limit;document.querySelectorAll('[data-limit]').forEach(x=>x.classList.toggle('selected',x===b));generate()}));
   $('findNumber').addEventListener('click',()=>{const n=Number($('numberSearch').value);showInfo(n);if(n>cfg.limit)$('status').textContent='Number coordinates calculated; increase the range to display it.'});
   $('numberSearch').addEventListener('keydown',e=>{if(e.key==='Enter')$('findNumber').click()});
