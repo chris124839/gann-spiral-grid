@@ -75,8 +75,26 @@
   $('findNumber').addEventListener('click',()=>{const n=Number($('numberSearch').value);showInfo(n);if(n>cfg.limit)$('status').textContent='Number coordinates calculated; increase the range to display it.'});
   $('numberSearch').addEventListener('keydown',e=>{if(e.key==='Enter')$('findNumber').click()});
   canvas.addEventListener('wheel',e=>{e.preventDefault();const old=cfg.zoom;cfg.zoom=Math.max(.08,Math.min(2.5,cfg.zoom*(e.deltaY<0?1.15:1/1.15)));if(old!==cfg.zoom)draw();},{passive:false});
-  canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing'});
-  canvas.addEventListener('pointermove',e=>{if(!dragging)return;const pitch=Math.max(2,cfg.cell*cfg.zoom);cfg.panX+=(e.clientX-lastX)/pitch;cfg.panY-=(e.clientY-lastY)/pitch;lastX=e.clientX;lastY=e.clientY;draw()});
-  function endDrag(){dragging=false;canvas.style.cursor='grab'}canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+  // Click-and-drag panning works with mouse, pen, and touch.
+  canvas.style.touchAction='none';
+  canvas.addEventListener('pointerdown',e=>{
+    if(e.button!==undefined&&e.button!==0)return;
+    e.preventDefault();dragging=true;lastX=e.clientX;lastY=e.clientY;
+    try{canvas.setPointerCapture(e.pointerId)}catch(_){}
+    canvas.style.cursor='grabbing';
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(!dragging)return;e.preventDefault();
+    const pitch=Math.max(2,cfg.cell*cfg.zoom);
+    cfg.panX+=(e.clientX-lastX)/pitch;
+    cfg.panY-=(e.clientY-lastY)/pitch;
+    lastX=e.clientX;lastY=e.clientY;draw();
+  });
+  function endDrag(e){if(!dragging)return;dragging=false;canvas.style.cursor='grab';if(e&&e.pointerId!==undefined){try{canvas.releasePointerCapture(e.pointerId)}catch(_){}}}
+  canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',()=>{dragging=false;canvas.style.cursor='grab'});
+  // Double-click resets the view; arrow keys pan when the grid is focused.
+  canvas.tabIndex=0;
+  canvas.addEventListener('dblclick',()=>{cfg.panX=0;cfg.panY=0;cfg.zoom=1;draw()});
+  canvas.addEventListener('keydown',e=>{const step=e.shiftKey?5:1;if(e.key==='ArrowLeft')cfg.panX+=step;else if(e.key==='ArrowRight')cfg.panX-=step;else if(e.key==='ArrowUp')cfg.panY-=step;else if(e.key==='ArrowDown')cfg.panY+=step;else return;e.preventDefault();draw()});
   canvas.style.cursor='grab';window.addEventListener('resize',resize);renderLevels();resize();showInfo(108);
 })();
