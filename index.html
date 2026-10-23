@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071426">
+  <title>Gann Spiral Grid</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="mark">◎</div><div><h1>Gann Spiral Grid</h1><p>Spiral levels · Cardinal & Ordinal Crosses · Market Analysis</p></div></div>
+  <nav><a class="active" href="#dashboard">Dashboard</a><a href="#grid">Grid View</a><a href="#levels">Levels</a><a href="#about">About</a></nav>
+</header>
+<main id="dashboard" class="layout">
+  <aside class="panel controls">
+    <h2>⚙ Grid Settings</h2>
+    <label for="center">Center number</label><input id="center" type="number" min="1" value="1">
+    <label for="limit">Total numbers / levels</label><input id="limit" type="number" min="1" step="1" value="100000">
+    <small>Use any positive safe integer. Very large grids are drawn progressively.</small>
+    <label for="cellSize">Cell size <span id="cellLabel">22 px</span></label><input id="cellSize" type="range" min="12" max="34" value="22">
+    <label class="toggle"><span>Show numbers</span><input id="showNumbers" type="checkbox" checked><i></i></label>
+    <label class="toggle"><span>Cardinal cross (N–S–E–W)</span><input id="showCardinal" type="checkbox" checked><i></i></label>
+    <label class="toggle"><span>Ordinal cross (diagonals)</span><input id="showOrdinal" type="checkbox" checked><i></i></label>
+    <label for="interval">Highlight intervals</label><select id="interval"><option value="0">None</option><option value="9">Every 9</option><option value="45">Every 45</option><option value="90">Every 90</option><option value="360">Every 360</option></select>
+    <button id="generate" class="primary">↻ Generate grid</button>
+    <div class="preset-label">Quick presets</div><div class="presets">
+      <button data-limit="1000">1K</button><button data-limit="5000">5K</button><button data-limit="10000">10K</button><button data-limit="50000">50K</button><button data-limit="100000" class="selected">100K</button>
+    </div>
+    <p id="status" class="status">Ready</p>
+  </aside>
+
+  <section id="grid" class="panel chart-panel">
+    <div class="chart-heading"><h2>Gann Spiral Grid</h2><p>Cardinal axes in red/blue · Ordinal diagonals in gold/orange</p></div>
+    <div class="canvas-wrap"><canvas id="spiral" aria-label="Interactive square spiral grid"></canvas></div>
+    <div class="legend">
+      <span><b class="swatch red"></b>North–South</span><span><b class="swatch blue"></b>East–West</span>
+      <span><b class="swatch gold"></b>NE–SW ordinal</span><span><b class="swatch orange"></b>NW–SE ordinal</span>
+    </div>
+  </section>
+
+  <aside class="right-stack">
+    <section class="panel">
+      <h2>⌕ Number Information</h2>
+      <div class="search-row"><input id="numberSearch" type="number" min="1" value="108" aria-label="Number to find"><button id="findNumber">Find</button></div>
+      <div id="numberInfo" class="info">
+        <div class="info-line"><span>Number</span><strong>108</strong></div>
+        <div class="info-line"><span>Ring</span><strong>—</strong></div>
+        <div class="info-line"><span>Grid coordinates</span><strong>—</strong></div>
+        <div class="info-line"><span>Cross classification</span><strong>—</strong></div>
+        <div class="info-line"><span>Angle from center</span><strong>—</strong></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Cross Highlights</h2>
+      <div class="cross-item"><b class="swatch red"></b><div><strong>North–South</strong><small>Cardinal axis · vertical</small></div></div>
+      <div class="cross-item"><b class="swatch blue"></b><div><strong>East–West</strong><small>Cardinal axis · horizontal</small></div></div>
+      <div class="cross-item"><b class="swatch gold"></b><div><strong>NE–SW</strong><small>Ordinal diagonal · 45° / 225°</small></div></div>
+      <div class="cross-item"><b class="swatch orange"></b><div><strong>NW–SE</strong><small>Ordinal diagonal · 135° / 315°</small></div></div>
+    </section>
+    <section id="levels" class="panel">
+      <h2>Sample Levels</h2><div class="table-scroll"><table><thead><tr><th>Ring</th><th>Start</th><th>End</th><th>Count</th></tr></thead><tbody id="levelRows"></tbody></table></div>
+      <small>Ring ranges are derived from square-spiral coordinates.</small>
+    </section>
+  </aside>
+</main>
+<footer id="about">Standalone browser dashboard · No external libraries · For educational market analysis, not trading advice.</footer>
+<script src="app.js"></script>
+</body>
+</html>
