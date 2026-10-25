@@ -32,7 +32,10 @@
     return mode==='yearly'?String(d.getFullYear()):d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
   }
   function applyGridMode(){
-    cfg.gridMode=$('gridMode').value;cfg.limit=GRID_LIMITS[cfg.gridMode]||100000;$('limit').value=cfg.limit;
+    cfg.gridMode=$('gridMode').value;
+    const anchors={weekly:'2025-12-01',monthly:'2025-09-26',yearly:'2025-01-01'};
+    if(anchors[cfg.gridMode])$('gridStartDate').value=anchors[cfg.gridMode];
+    cfg.limit=GRID_LIMITS[cfg.gridMode]||100000;$('limit').value=cfg.limit;
     document.querySelectorAll('[data-limit]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.limit)===cfg.limit));
     cfg.cell=cfg.gridMode==='price'?Number($('cellSize').value):42;
     $('cellSize').value=Math.max(12,Math.min(34,cfg.cell));
