@@ -16,6 +16,18 @@
   <aside class="panel controls">
     <h2>⚙ Grid Settings</h2>
     <label for="center">Center number</label><input id="center" type="number" min="1" value="1">
+    <label for="gridMode">Workbook grid / time scale</label>
+    <select id="gridMode">
+      <option value="price">Price spiral (existing)</option>
+      <option value="session">Session Grid · 5 minutes</option>
+      <option value="24h">24-Hour Grid · 5 minutes</option>
+      <option value="weekly">Weekly Grid</option>
+      <option value="monthly">Monthly Grid</option>
+      <option value="yearly">Yearly Grid</option>
+    </select>
+    <label for="gridStartDate">Date-grid starting date</label><input id="gridStartDate" type="date" value="2025-12-01">
+    <label for="gridStartTime">Session start time</label><input id="gridStartTime" type="time" value="09:15">
+    <small>Workbook grids use cell 1 as the anchor. Date/time labels follow cell count; session and 24-hour templates use 5-minute increments.</small>
     <label for="limit">Total numbers / levels</label><input id="limit" type="number" min="1" step="1" value="100000">
     <small>Use any positive safe integer. Very large grids are drawn progressively.</small>
     <label for="cellSize">Cell size <span id="cellLabel">22 px</span></label><input id="cellSize" type="range" min="12" max="34" value="22">
