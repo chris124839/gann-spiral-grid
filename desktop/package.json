@@ -1,0 +1,41 @@
+{
+  "name": "gann-spiral-desktop",
+  "version": "0.1.0",
+  "description": "Offline-first Gann and OHLC analysis workstation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable nsis"
+  },
+  "devDependencies": {
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.gannspiral.workstation",
+    "productName": "Gann Spiral Workstation",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "portable": {
+      "artifactName": "Gann-Spiral-Workstation-Portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Gann-Spiral-Workstation-Setup.exe"
+    }
+  }
+}

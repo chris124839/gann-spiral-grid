@@ -1,0 +1,33 @@
+name: Build Gann Spiral Workstation
+on:
+  workflow_dispatch:
+  push:
+    branches: [desktop-app-foundation]
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/build-gann-desktop.yml'
+permissions:
+  contents: read
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm install
+      - name: Package Windows executable and installer
+        working-directory: desktop
+        run: npm run dist
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gann-spiral-workstation-windows
+          path: desktop/dist/*
+          if-no-files-found: error
+          retention-days: 14
