@@ -1,0 +1,1 @@
+const {contextBridge,ipcRenderer}=require('electron');contextBridge.exposeInMainWorld('gannDesktop',{openOHLC:()=>ipcRenderer.invoke('data:open'),saveFile:(payload)=>ipcRenderer.invoke('data:save')});
